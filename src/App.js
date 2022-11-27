@@ -22,16 +22,18 @@ import TipoProductoMaritimo from './components/TipoProductoMaritimo';
 import Flota from './components/Flota';
 import PedidoMaritimo from './components/PedidoMaritimo';
 import SignIn from './components/Auth/SignIn';
+import SignUp from './components/Auth/SignUp';
+import Header from './components/Header';
 
 const App = () => {
   const [auth, setAuth] = React.useState(null);
-  const location = useLocation();
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
   useEffect(() => {
     if(!auth && location.pathname !== '/signin'){
       navigate('/signin');
-    } 
+    }
   },[]) // eslint-disable-line
 
   return (
@@ -39,10 +41,11 @@ const App = () => {
       {!auth ? (
         <Routes>
           <Route exact path='/signin' element={<SignIn setAuth={setAuth} />}/>
-          <Route exact path='/signup' element={<SignIn setAuth={setAuth} />}/>
+          <Route exact path='/signup' element={<SignUp setAuth={setAuth} />}/>
         </Routes>
       ) : (
       <>
+        <Header/>
         <Navigation/>
         <Routes>
           <Route exact path='/' element={<Cliente />}/>

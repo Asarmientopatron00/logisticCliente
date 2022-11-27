@@ -10,7 +10,7 @@ export const  authReducer = (state, action) => {
     case "getSession": 
       return {
         ...state,
-        user: action.payload.user,
+        user: action.payload.usuario,
       }
     
     case "logout":

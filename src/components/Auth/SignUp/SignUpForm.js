@@ -53,20 +53,39 @@ const useStyles = {
 };
 
 const validationSchema = yup.object({
-  username: yup
+  nombre: yup
     .string()
     .required('Requerido'),
-  password: yup
+  identificacion_usuario: yup
     .string()
     .required('Requerido'),
+  correo_electronico: yup
+    .string()
+    .email('Formato email no válido')
+    .required('Requerido'),
+  clave: yup
+    .string()
+    .required('Requerido'),
+  confirm_clave: yup
+    .string()
+    .required('Requerido')
+    .test({
+      name: 'confirm',
+      exclusive: false,
+      params: {},
+      message: 'Claves no coinciden', // eslint-disable-line
+      test: function(value){
+        return (value && this.parent.clave === value) || value === undefined;
+      }
+    }),
 });
 
-const SignInForm = (props) => {
-  const {setAuth, navigate} = props;
-  const {signIn} = useContext(AuthContext);
-  // const onGoToForgetPassword = () => {
-  //   navigate('/forget-password');
-  // };
+const SignUpForm = (props) => {
+  const {navigate} = props;
+  const {SignUp} = useContext(AuthContext);
+  const onGoLogin = () => {
+    navigate('/');
+  };
 
   return (
     <Box flex={1} display='flex' flexDirection='column'>
@@ -82,13 +101,22 @@ const SignInForm = (props) => {
         <Formik
           validateOnChange={true}
           initialValues={{
-            username: '',
-            password: '',
+            nombre: '',
+            identificacion_usuario: '',
+            correo_electronico: '',
+            clave: '',
+            confirm_clave: '',
           }}
           validationSchema={validationSchema}
           onSubmit={(data, {setSubmitting}) => {
             setSubmitting(true);
-            signIn({username: data.username, password: data.password, setAuth: setAuth, navigate: navigate});
+            SignUp({
+              nombre: data.nombre, 
+              identificacion_usuario: data.identificacion_usuario,
+              correo_electronico: data.correo_electronico,
+              clave: data.clave,
+              redirect: onGoLogin
+            });
             setSubmitting(false);
           }}>
           {({isSubmitting}) => (
@@ -96,26 +124,45 @@ const SignInForm = (props) => {
               <Box width='100%'>
                 <MyTextField
                   fullWidth
-                  placeholder={'Identificación'}
-                  name='username'
-                  label='Identificación'
+                  name='nombre'
+                  label='Nombre'
                   variant='outlined'
-                  // sx={useStyles.myTextFieldRoot}
                 />
               </Box>
-
+              <Box width='100%'>
+                <MyTextField
+                  fullWidth
+                  name='identificacion_usuario'
+                  label='Identificacion'
+                  variant='outlined'
+                />
+              </Box>
+              <Box width='100%'>
+                <MyTextField
+                  fullWidth
+                  name='correo_electronico'
+                  label='Email'
+                  variant='outlined'
+                />
+              </Box>
               <Box width='100%' >
                 <MyTextField
                   fullWidth
                   type='password'
-                  placeholder={'Contraseña'}
                   label='Contraseña'
-                  name='password'
+                  name='clave'
                   variant='outlined'
-                  // className={useStyles.myTextFieldRoot}
                 />
               </Box>
-
+              <Box width='100%' >
+                <MyTextField
+                  fullWidth
+                  type='password'
+                  label='Confirmar Contraseña'
+                  name='confirm_clave'
+                  variant='outlined'
+                />
+              </Box>
               <Box
                 mb={{xs: 3, xl: 4}}
                 display='flex'
@@ -127,12 +174,11 @@ const SignInForm = (props) => {
                   color='primary.main'
                   component='span'
                   sx={useStyles.pointer}
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate('/signin')}
                   fontSize={15}>
-                  Registrarse
+                  Iniciar Sesión
                 </Box>
               </Box>
-
               <Box
                 mb={6}
                 display='flex'
@@ -145,7 +191,7 @@ const SignInForm = (props) => {
                   type='submit'
                   disabled={isSubmitting}
                   sx={useStyles.btnRoot}>
-                  Iniciar Sesión
+                  Registrarse
                 </Button>
               </Box>
             </Form>
@@ -156,4 +202,4 @@ const SignInForm = (props) => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;
