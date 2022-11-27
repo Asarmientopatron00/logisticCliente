@@ -1,6 +1,7 @@
 import axios from "axios";
+import environment from './../env';
 
-const baseURL = 'http://api-curso.test/api';
+const baseURL = environment.API_URL;
 
 const api = axios.create({
   baseURL,

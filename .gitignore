@@ -2,6 +2,7 @@
 
 #environment
 .env
+src/env.js
 
 # dependencies
 /node_modules
