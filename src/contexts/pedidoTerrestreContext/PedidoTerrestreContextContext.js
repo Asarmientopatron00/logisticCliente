@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from "react"
 import api from "../../api/api";
 import { CommonContext } from "../commonContext/commonContext";
-import { clienteReducer } from "./clienteReducer";
+import { pedidoTerrestreReducer } from "./pedidoTerrestreReducer";
 
 const initialState = {
   rows: [],
@@ -14,24 +14,34 @@ const initialState = {
   total: 1,
 }
 
-export const ClienteContext = createContext();
+export const PedidoTerrestreContext = createContext();
 
-export const ClienteProvider = ({children}) => {
-  const [state, dispatch] = useReducer(clienteReducer, initialState);
+export const PedidoTerrestreProvider = ({children}) => {
+  const [state, dispatch] = useReducer(pedidoTerrestreReducer, initialState);
   const {fetchStart, fetchSuccess, showMessage, fetchError } = useContext(CommonContext);
   
   const getList = async ({
     page, 
     rowsPerPage,
-    name
+    guia,
+    fechaInicial,
+    fechaFinal,
+    estado,
+    cliente,
+    producto
   }) => {
     try {
       fetchStart();
-      const res = await api.get('clientes', {
+      const res = await api.get('pedidos-terrestres', {
         params: {
           page,
           limite: rowsPerPage,
-          nombre: name??''
+          guia: guia??'',
+          fechaInicial: fechaInicial??'',
+          fechaFinal: fechaFinal??'',
+          estado: estado??'',
+          cliente: cliente??'',
+          producto: producto??'',
         }
       });
       if(res.status === 200){
@@ -50,7 +60,7 @@ export const ClienteProvider = ({children}) => {
   const getLightList = async () => {
     try {
       fetchStart();
-      const res = await api.get('clientes', {
+      const res = await api.get('pedidos-terrestres', {
         params: {
           ligera: true
         }
@@ -71,7 +81,7 @@ export const ClienteProvider = ({children}) => {
   const onShow = async (id) => {
     try {
       fetchStart();
-      const res = await api.get('clientes/'+id);
+      const res = await api.get('pedidos-terrestres/'+id);
       if(res.status === 200){
         fetchSuccess();
       }
@@ -84,7 +94,7 @@ export const ClienteProvider = ({children}) => {
   const onCreate = async (params, handleOnClose, refresh) => {
     try {
       fetchStart();
-      const res = await api.post('clientes', params);
+      const res = await api.post('pedidos-terrestres', params);
       if(res.status === 201){
         fetchSuccess();
         handleOnClose();
@@ -100,7 +110,7 @@ export const ClienteProvider = ({children}) => {
   const onUpdate = async (params, handleOnClose, refresh) => {
     try {
       fetchStart();
-      const res = await api.put('clientes/'+params.id, params);
+      const res = await api.put('pedidos-terrestres/'+params.id, params);
       if(res.status === 200){
         fetchSuccess();
         handleOnClose();
@@ -116,7 +126,7 @@ export const ClienteProvider = ({children}) => {
   const onDelete = async (id) => {
     try {
       fetchStart();
-      const res = await api.delete('clientes/'+id);
+      const res = await api.delete('pedidos-terrestres/'+id);
       if(res.status === 200){
         fetchSuccess();
         showMessage([res.data.mensajes[0], res.data.mensajes[1]]);
@@ -128,7 +138,7 @@ export const ClienteProvider = ({children}) => {
   }
 
   return (
-    <ClienteContext.Provider value={{
+    <PedidoTerrestreContext.Provider value={{
       ...state,
       getList,
       getLightList,
@@ -138,6 +148,6 @@ export const ClienteProvider = ({children}) => {
       onDelete
     }}>
       {children}
-    </ClienteContext.Provider>
+    </PedidoTerrestreContext.Provider>
   );
 }

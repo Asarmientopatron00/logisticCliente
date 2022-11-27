@@ -1,0 +1,1 @@
+export const currencyFormatter = Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP'});

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from "react"
 import api from "../../api/api";
 import { CommonContext } from "../commonContext/commonContext";
-import { clienteReducer } from "./clienteReducer";
+import { tipoProductoTerrestreReducer } from "./tipoProductoTerrestreReducer";
 
 const initialState = {
   rows: [],
@@ -14,10 +14,10 @@ const initialState = {
   total: 1,
 }
 
-export const ClienteContext = createContext();
+export const TipoProductoTerrestreContext = createContext();
 
-export const ClienteProvider = ({children}) => {
-  const [state, dispatch] = useReducer(clienteReducer, initialState);
+export const TipoProductoTerrestreProvider = ({children}) => {
+  const [state, dispatch] = useReducer(tipoProductoTerrestreReducer, initialState);
   const {fetchStart, fetchSuccess, showMessage, fetchError } = useContext(CommonContext);
   
   const getList = async ({
@@ -27,7 +27,7 @@ export const ClienteProvider = ({children}) => {
   }) => {
     try {
       fetchStart();
-      const res = await api.get('clientes', {
+      const res = await api.get('tipos-productos-terrestres', {
         params: {
           page,
           limite: rowsPerPage,
@@ -50,7 +50,7 @@ export const ClienteProvider = ({children}) => {
   const getLightList = async () => {
     try {
       fetchStart();
-      const res = await api.get('clientes', {
+      const res = await api.get('tipos-productos-terrestres', {
         params: {
           ligera: true
         }
@@ -71,7 +71,7 @@ export const ClienteProvider = ({children}) => {
   const onShow = async (id) => {
     try {
       fetchStart();
-      const res = await api.get('clientes/'+id);
+      const res = await api.get('tipos-productos-terrestres/'+id);
       if(res.status === 200){
         fetchSuccess();
       }
@@ -84,7 +84,7 @@ export const ClienteProvider = ({children}) => {
   const onCreate = async (params, handleOnClose, refresh) => {
     try {
       fetchStart();
-      const res = await api.post('clientes', params);
+      const res = await api.post('tipos-productos-terrestres', params);
       if(res.status === 201){
         fetchSuccess();
         handleOnClose();
@@ -100,7 +100,7 @@ export const ClienteProvider = ({children}) => {
   const onUpdate = async (params, handleOnClose, refresh) => {
     try {
       fetchStart();
-      const res = await api.put('clientes/'+params.id, params);
+      const res = await api.put('tipos-productos-terrestres/'+params.id, params);
       if(res.status === 200){
         fetchSuccess();
         handleOnClose();
@@ -116,7 +116,7 @@ export const ClienteProvider = ({children}) => {
   const onDelete = async (id) => {
     try {
       fetchStart();
-      const res = await api.delete('clientes/'+id);
+      const res = await api.delete('tipos-productos-terrestres/'+id);
       if(res.status === 200){
         fetchSuccess();
         showMessage([res.data.mensajes[0], res.data.mensajes[1]]);
@@ -128,7 +128,7 @@ export const ClienteProvider = ({children}) => {
   }
 
   return (
-    <ClienteContext.Provider value={{
+    <TipoProductoTerrestreContext.Provider value={{
       ...state,
       getList,
       getLightList,
@@ -138,6 +138,6 @@ export const ClienteProvider = ({children}) => {
       onDelete
     }}>
       {children}
-    </ClienteContext.Provider>
+    </TipoProductoTerrestreContext.Provider>
   );
 }

@@ -45,7 +45,7 @@ export const mainStyles = {
     },
   },
   editIcon: {
-    color: 'blue',
+    color: '#0C4F7F',
   },
   visivilityIcon: {
     color: 'gray',
@@ -75,7 +75,7 @@ export const mainStyles = {
     fontWeight: 'bold',
   },
   createButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#0C4F7F',
     color: 'white',
     boxShadow:
       '0px 3px 5px -1px rgb(0 0 0 / 30%), 0px 6px 10px 0px rgb(0 0 0 / 20%), 0px 1px 18px 0px rgb(0 0 0 / 16%)',
@@ -110,6 +110,12 @@ export const mainStyles = {
     gridTemplateColumns: '3fr 3fr 1fr',
     gap: '20px',
   },
+  contenedorFiltros2: {
+    width: '90%',
+    display: 'grid',
+    gridTemplateColumns: '3fr 3fr 3fr 1fr',
+    gap: '20px',
+  },
   bottomsGroup: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -141,7 +147,7 @@ export const mainStyles = {
     },
   },
   btnPrymary: {
-    backgroundColor: 'blue',
+    backgroundColor: '#0C4F7F',
   },
   btnSecundary: {
     backgroundColor: 'gray',

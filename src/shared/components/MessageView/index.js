@@ -12,7 +12,6 @@ import {
   Snackbar,
 } from '@mui/material';
 import { amber, green } from '@mui/material/colors';
-import { DELETE } from '../../constants/Constantes';
 
 const variantIcon = {
   success: CheckCircle,
@@ -57,7 +56,7 @@ const AppSnackbar = (props) => {
   const Icon = variantIcon[variant];
 
   useEffect(() => {
-    if (message && variant !== DELETE) {
+    if (message) {
       setOpen(true);
     }
   }, [message, variant]); // eslint-disable-line 

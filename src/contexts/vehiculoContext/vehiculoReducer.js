@@ -1,4 +1,4 @@
-export const  clienteReducer = (state, action) => {
+export const  vehiculoReducer = (state, action) => {
   switch (action.type) {
     case "getList":
       return {

@@ -2,17 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button} from '@mui/material';
 import {Form} from 'formik';
 import MyTextField from '../../../shared/components/MyTextField';
-import MySelectField from '../../../shared/components/MySelectField';
 import { mainStyles } from '../../../shared/styles/mainStyles';
-import { ACTIONS, TIPOS_DOCUMENTOS } from '../../../shared/constants/Constantes';
+import { ACTIONS } from '../../../shared/constants/Constantes';
 
-const grid = {
-  display: 'grid',
-  gap: '20px',
-  gridTemplateColumns: 'repeat(2, 1fr)'
-}
-
-const ClienteForm = (props) => {
+const BodegaForm = (props) => {
   const {
     handleOnClose, 
     accion, 
@@ -36,43 +29,16 @@ const ClienteForm = (props) => {
           fontWeight={'bold'}>
           {titulo}
         </Box>
-        <Box sx={grid}>
-          <MySelectField
-            label='Tipo Documento'
-            name='tipo_documento'
-            required
-            ninguno='true'
-            disabled={disabled}
-            options={TIPOS_DOCUMENTOS}
-          />
-          <MyTextField
-            label='Documento'
-            name='numero_documento'
-            required
-            disabled={disabled}
-          />
-        </Box>
         <MyTextField
           label='Nombre'
           name='nombre'
           required
           disabled={disabled}
         />
-        <Box sx={grid}>
-          <MyTextField
-            label='Telefono'
-            name='telefono'
-            disabled={disabled}
-          />
-          <MyTextField
-            label='Email'
-            name='email'
-            disabled={disabled}
-          />
-        </Box>
         <MyTextField
           label='Dirección'
           name='direccion'
+          required
           disabled={disabled}
         />
       </Box>
@@ -95,4 +61,4 @@ const ClienteForm = (props) => {
   );
 };
 
-export default ClienteForm;
+export default BodegaForm;
