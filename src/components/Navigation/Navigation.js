@@ -24,15 +24,15 @@ const Navigation = () => {
     setAnchorEl(initialAnchor);
   };
 
-
   return (
     <div 
       style={{
         display: 'flex', 
         flexDirection: 'row', 
-        justifyContent: 'center', 
+        justifyContent: 'flex-end', 
         alignItems: 'center',
         marginTop: 4,
+        paddingRight: 15,
         backgroundColor: '#0C4F7F',
       }}
     >

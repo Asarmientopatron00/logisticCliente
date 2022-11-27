@@ -13,8 +13,7 @@ import {
   IconButton,
   Tooltip,
   TextField,
-  Pagination,
-  MenuItem
+  Pagination
 } from '@mui/material';
 import {
   Delete, 
@@ -24,94 +23,49 @@ import {
   ClearAll
 } from '@mui/icons-material';
 import Swal from 'sweetalert2';
-import PedidoTerrestreCreador from './PedidoTerrestreCreador';
+import moment from 'moment';
+import FlotaCreador from './FlotaCreador';
 import {
   UPDATE,
   CREATE,
   DELETE,
   ROWS_PER_PAGE_OPTIONS,
   ACTIONS,
-  ESTADOS_PEDIDO,
 } from '../../shared/constants/Constantes';
 import MessageView  from '../../shared/components/MessageView';
 import MyCell from '../../shared/components/MyCell';
 import {useDebounce} from '../../shared/customHooks/useDebounce';
 import {mainStyles} from '../../shared/styles/mainStyles';
 import { CommonContext } from '../../contexts/commonContext/commonContext';
-import { PedidoTerrestreContext } from '../../contexts/pedidoTerrestreContext/PedidoTerrestreContext';
-import { currencyFormatter } from '../../shared/utils/utils';
-import { ClienteContext } from '../../contexts/clienteContext/ClienteContext';
-import { TipoProductoTerrestreContext } from '../../contexts/tipoProductoTerrestreContext/TipoProductoTerrestreContext';
+import { FlotaContext } from '../../contexts/flotaContext/FlotaContext';
 
 const cells = [
   {
-    id: 'guia',
+    id: 'nombre',
     typeHead: 'string',
-    label: 'Guia',
+    label: 'Nombre',
     value: (value) => value,
     align: 'left',
   },
   {
-    id: 'cliente',
+    id: 'numero',
     typeHead: 'string',
-    label: 'Cliente',
+    label: 'Número Flota',
     value: (value) => value,
     align: 'left',
   },
   {
-    id: 'tipo_producto',
+    id: 'fecha_modificacion',
     typeHead: 'string',
-    label: 'Producto',
-    value: (value) => value,
+    label: 'Fecha Modificación',
+    value: (value) => moment(value).format('DD-MM-YYYY HH:mm:ss'),
     align: 'left',
   },
   {
-    id: 'cantidad_producto',
+    id: 'fecha_creacion',
     typeHead: 'string',
-    label: 'Cantidad',
-    value: (value) => value,
-    align: 'right',
-  },
-  {
-    id: 'bodega',
-    typeHead: 'string',
-    label: 'Bodega',
-    value: (value) => value,
-    align: 'left',
-  },
-  {
-    id: 'precio_envio',
-    typeHead: 'string',
-    label: 'Envio',
-    value: (value) => currencyFormatter.format(value),
-    align: 'right',
-  },
-  {
-    id: 'descuento',
-    typeHead: 'string',
-    label: 'Descuento',
-    value: (value) => currencyFormatter.format(value),
-    align: 'right',
-  },
-  {
-    id: 'fecha_registro',
-    typeHead: 'string',
-    label: 'Fecha Registro',
-    value: (value) => value,
-    align: 'left',
-  },
-  {
-    id: 'fecha_entrega',
-    typeHead: 'string',
-    label: 'Fecha Entrega',
-    value: (value) => value,
-    align: 'left',
-  },
-  {
-    id: 'estado',
-    typeHead: 'string',
-    label: 'Estado',
-    value: (value) => ESTADOS_PEDIDO.map((state) => state.id === value ? state.nombre : ''),
+    label: 'Fecha Creación',
+    value: (value) => moment(value).format('DD-MM-YYYY HH:mm:ss'),
     align: 'left',
   },
 ];
@@ -145,18 +99,11 @@ function EnhancedTableHead(props) {
 
 const EnhancedTableToolbar = (props) => {
   const {
-    onOpenAddPedidoTerrestre,
+    onOpenAddFlota,
     queryFilter,
-    guia,
+    nombre,
     limpiarFiltros,
-    titulo,
-    fechaInicial,
-    fechaFinal,
-    estado,
-    clientes,
-    cliente,
-    tiposProducto,
-    producto
+    titulo
   } = props;
   return (
     <Toolbar sx={mainStyles.toolbarRoot}>
@@ -170,8 +117,8 @@ const EnhancedTableToolbar = (props) => {
           </Typography>
           <Box sx={mainStyles.horizontalBottoms}>
             <Tooltip
-              title='Crear PedidoTerrestre'
-              onClick={onOpenAddPedidoTerrestre}>
+              title='Crear Flota'
+              onClick={onOpenAddFlota}>
               <IconButton
                 sx={mainStyles.createButton}
                 aria-label='filter list'>
@@ -180,37 +127,13 @@ const EnhancedTableToolbar = (props) => {
             </Tooltip>
           </Box>
         </Box>
-        <Box sx={mainStyles.contenedorFiltros2}>
+        <Box sx={mainStyles.contenedorFiltros}>
           <TextField
-            label='Guia'
-            name='guia'
+            label='Número flota'
+            name='nombre'
             variant='standard'
             onChange={queryFilter}
-            value={guia}
-            sx={mainStyles.inputFiltros}
-          />
-          <TextField
-            label='Fecha Inicial Reg.'
-            name='fechaInicial'
-            variant='standard'
-            type='date'
-            InputLabelProps={{
-              shrink: true
-            }}
-            onChange={queryFilter}
-            value={fechaInicial}
-            sx={mainStyles.inputFiltros}
-          />
-          <TextField
-            label='Fecha Final Reg.'
-            name='fechaFinal'
-            variant='standard'
-            type='date'
-            InputLabelProps={{
-              shrink: true
-            }}
-            onChange={queryFilter}
-            value={fechaFinal}
+            value={nombre}
             sx={mainStyles.inputFiltros}
           />
           <Box display='grid'>
@@ -224,66 +147,6 @@ const EnhancedTableToolbar = (props) => {
               </Tooltip>
             </Box>
           </Box>
-          <TextField
-            label='Estado Pedido'
-            name='estado'
-            variant='standard'
-            select
-            onChange={queryFilter}
-            value={estado}>
-            {ESTADOS_PEDIDO.map((estado) => {
-              return (
-                <MenuItem
-                  value={estado.id}
-                  key={estado.id}
-                  id={estado.id}
-                  sx={mainStyles.pointer}
-                >
-                  {estado.nombre}
-                </MenuItem>
-              );
-            })}
-            </TextField>
-          <TextField
-            label='Cliente'
-            name='cliente'
-            variant='standard'
-            select
-            onChange={queryFilter}
-            value={cliente}>
-            {clientes.map((customer) => {
-              return (
-                <MenuItem
-                  value={customer.id}
-                  key={customer.id}
-                  id={customer.id}
-                  sx={mainStyles.pointer}
-                >
-                  {customer.nombre}
-                </MenuItem>
-              );
-            })}
-            </TextField>
-          <TextField
-            label='Tipo Producto'
-            name='producto'
-            variant='standard'
-            select
-            onChange={queryFilter}
-            value={producto}>
-            {tiposProducto.map((productType) => {
-              return (
-                <MenuItem
-                  value={productType.id}
-                  key={productType.id}
-                  id={productType.id}
-                  sx={mainStyles.pointer}
-                >
-                  {productType.nombre}
-                </MenuItem>
-              );
-            })}
-            </TextField>
         </Box>
       </>
     </Toolbar>
@@ -291,17 +154,12 @@ const EnhancedTableToolbar = (props) => {
 };
 
 const initialFilters = {
-  guia: '',
-  fechaInicial: '',
-  fechaFinal: '',
-  estado: '',
-  cliente: '',
-  producto: ''
+  nombre: '',
 }
 
-const titulo = 'Pedidos Log. Terrestre';
+const titulo = 'Flotas';
 
-const PedidoTerrestre = (props) => {
+const Flota = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [showTable, setShowTable] = useState(true);
   const [page, setPage] = useState(1);
@@ -309,18 +167,12 @@ const PedidoTerrestre = (props) => {
   const [accion, setAccion] = useState(ACTIONS.ver);
   const [selected, setSelected] = useState(0);
   const [filters, setFilters] = useState(initialFilters);
-  const {rows, desde, hasta, ultima_pagina, total, getList, onDelete} = useContext(PedidoTerrestreContext);
+  const {rows, desde, hasta, ultima_pagina, total, getList, onDelete} = useContext(FlotaContext);
   const {message, error, messageType} = useContext(CommonContext);
-  const { light: clientes, getLightList: getClientes} = useContext(ClienteContext);
-  const { light: tiposProducto, getLightList: getTiposProductos} = useContext(TipoProductoTerrestreContext);
+  // const classes = useStyles({vp: '0px'});
   const textoPaginacion = `Mostrando de ${desde} a ${hasta} de ${total} resultados - Página ${page} de ${ultima_pagina}`;
-  const { guia, fechaInicial, fechaFinal, estado, cliente, producto } = filters;
-  const debouncedName = useDebounce(guia, 800);
-
-  useEffect(() => {
-    getClientes();
-    getTiposProductos();
-  },[]) // eslint-disable-line
+  const { nombre } = filters;
+  const debouncedName = useDebounce(nombre, 800);
 
   useEffect(() => {
     if (message && messageType === DELETE) {
@@ -338,12 +190,12 @@ const PedidoTerrestre = (props) => {
   }, [rows]);
 
   useEffect(() => {
-    getList({page, rowsPerPage, guia, fechaInicial, fechaFinal, estado, cliente, producto});
-  }, [page, rowsPerPage, debouncedName, fechaInicial, fechaFinal, estado, cliente, producto]); //eslint-disable-line
+    getList({page, rowsPerPage, name: nombre});
+  }, [page, rowsPerPage, debouncedName]); //eslint-disable-line
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedName, guia, fechaInicial, fechaFinal, estado, cliente, producto]);
+  }, [debouncedName]);
 
   const queryFilter = (e) => {
     setFilters({
@@ -358,25 +210,25 @@ const PedidoTerrestre = (props) => {
 
   const updateColeccion = () => {
     setPage(1);
-    getList({page, rowsPerPage, guia, fechaInicial, fechaFinal, estado, cliente, producto});
+    getList(page, rowsPerPage, nombre);
   };
 
-  const onOpenEditPedidoTerrestre = (row) => {
+  const onOpenEditFlota = (row) => {
     setSelected(row);
     setAccion(ACTIONS.editar);
     setShowForm(true);
   };
 
-  const onOpenViewPedidoTerrestre = (row) => {
+  const onOpenViewFlota = (row) => {
     setSelected(row);
     setAccion(ACTIONS.ver);
     setShowForm(true);
   };
 
-  const onDeletePedidoTerrestre = (id) => {
+  const onDeleteFlota = (id) => {
     Swal.fire({
       title: 'Confirmar',
-      text: '¿Seguro Que Desea Eliminar El Pedido?',
+      text: '¿Seguro Que Desea Eliminar El Flota?',
       allowEscapeKey: false,
       allowEnterKey: false,
       showCancelButton: true,
@@ -391,7 +243,7 @@ const PedidoTerrestre = (props) => {
     });
   };
 
-  const onOpenAddPedidoTerrestre = () => {
+  const onOpenAddFlota = () => {
     setSelected(0);
     setAccion(ACTIONS.crear);
     setShowForm(true);
@@ -416,18 +268,11 @@ const PedidoTerrestre = (props) => {
     <Box sx={mainStyles.root}>
       <Paper sx={mainStyles.paper}>
         <EnhancedTableToolbar
-          onOpenAddPedidoTerrestre={onOpenAddPedidoTerrestre}
+          onOpenAddFlota={onOpenAddFlota}
           queryFilter={queryFilter}
           limpiarFiltros={limpiarFiltros}
-          guia={guia}
-          fechaInicial={fechaInicial}
-          fechaFinal={fechaFinal}
-          estado={estado}
+          nombre={nombre}
           titulo={titulo}
-          clientes={clientes}
-          cliente={cliente}
-          producto={producto}
-          tiposProducto={tiposProducto}
         />
         {showTable ? (
           <Box sx={mainStyles.marcoTabla}>
@@ -480,19 +325,19 @@ const PedidoTerrestre = (props) => {
                           <TableCell align='center' sx={mainStyles.acciones}>
                             <Tooltip title={'Editar'}>
                               <Edit
-                                onClick={() => onOpenEditPedidoTerrestre(row)}
+                                onClick={() => onOpenEditFlota(row)}
                                 sx={{...mainStyles.generalIcons, ...mainStyles.editIcon}}
                               />
                             </Tooltip>
                             <Tooltip title={'Ver'}>
                               <Visibility
-                                onClick={() => onOpenViewPedidoTerrestre(row)}
+                                onClick={() => onOpenViewFlota(row)}
                                 sx={{...mainStyles.generalIcons, ...mainStyles.visivilityIcon}}
                               />
                             </Tooltip>
                             <Tooltip title={'Eliminar'}>
                               <Delete
-                                onClick={() => onDeletePedidoTerrestre(row.id)}
+                                onClick={() => onDeleteFlota(row.id)}
                                 sx={{...mainStyles.generalIcons, ...mainStyles.deleteIcon}}
                               />
                             </Tooltip>
@@ -560,7 +405,7 @@ const PedidoTerrestre = (props) => {
       </Paper>
 
       {showForm && (
-        <PedidoTerrestreCreador
+        <FlotaCreador
           showForm={showForm}
           selected={selected}
           accion={accion}
@@ -578,4 +423,4 @@ const PedidoTerrestre = (props) => {
   );
 };
 
-export default PedidoTerrestre;
+export default Flota;

@@ -2,14 +2,14 @@ import React, {useContext, useEffect} from 'react';
 import {Dialog, Slide} from '@mui/material';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import PedidoTerrestreForm from './PedidoTerrestreForm';
+import PedidoMaritimoForm from './PedidoMaritimoForm';
 import { ACTIONS } from '../../../shared/constants/Constantes';
-import { PedidoTerrestreContext } from '../../../contexts/pedidoTerrestreContext/PedidoTerrestreContext';
+import { PedidoMaritimoContext } from '../../../contexts/pedidoMaritimoContext/PedidoMaritimoContext';
 import { ClienteContext } from '../../../contexts/clienteContext/ClienteContext';
-import { VehiculoContext } from '../../../contexts/vehiculoContext/VehiculoContext';
-import { BodegaContext } from '../../../contexts/bodegaContext/BodegaContext';
-import { TipoProductoTerrestreContext } from '../../../contexts/tipoProductoTerrestreContext/TipoProductoTerrestreContext';
+import { TipoProductoMaritimoContext } from '../../../contexts/tipoProductoMaritimoContext/TipoProductoMaritimoContext';
 import moment from 'moment';
+import { FlotaContext } from '../../../contexts/flotaContext/FlotaContext';
+import { PuertoContext } from '../../../contexts/puertoContext/PuertoContext';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='down' ref={ref} {...props} />;
@@ -24,11 +24,11 @@ const validationSchema = yup.object({
     .number()
     .integer('Debe ser un entero')
     .required('Requerido'),
-  bodega_id: yup
+  puerto_id: yup
     .number()
     .integer('Debe ser un entero')
     .required('Requerido'),
-  vehiculo_id: yup
+  flota_id: yup
     .number()
     .integer('Debe ser un entero')
     .required('Requerido'),
@@ -51,7 +51,7 @@ const validationSchema = yup.object({
     .required('Requerido'),
 });
 
-const PedidoTerrestreCreador = (props) => {
+const PedidoMaritimoCreador = (props) => {
   const {
     showForm,
     selected,
@@ -61,16 +61,16 @@ const PedidoTerrestreCreador = (props) => {
     titulo,
   } = props;
 
-  const { onCreate, onUpdate} = useContext(PedidoTerrestreContext);
+  const { onCreate, onUpdate} = useContext(PedidoMaritimoContext);
   const { light: clientes, getLightList: getClientes} = useContext(ClienteContext);
-  const { light: vehiculos, getLightList: getVehiculos} = useContext(VehiculoContext);
-  const { light: bodegas, getLightList: getBodegas} = useContext(BodegaContext);
-  const { light: tiposProducto, getLightList: getTiposProductos} = useContext(TipoProductoTerrestreContext);
+  const { light: flotas, getLightList: getFlotas} = useContext(FlotaContext);
+  const { light: puertos, getLightList: getPuertos} = useContext(PuertoContext);
+  const { light: tiposProducto, getLightList: getTiposProductos} = useContext(TipoProductoMaritimoContext);
 
   useEffect(() => {
     getClientes();
-    getBodegas();
-    getVehiculos();
+    getPuertos();
+    getFlotas();
     getTiposProductos();
   },[]) // eslint-disable-line
 
@@ -93,8 +93,8 @@ const PedidoTerrestreCreador = (props) => {
             cliente_id: selected?.cliente_id??'',
             guia: selected?.guia??'',
             tipo_producto_id: selected?.tipo_producto_id??'',
-            bodega_id: selected?.bodega_id??'',
-            vehiculo_id: selected?.vehiculo_id??'',
+            puerto_id: selected?.puerto_id??'',
+            flota_id: selected?.flota_id??'',
             cantidad_producto: selected?.cantidad_producto??'',
             fecha_registro: selected?.fecha_registro??moment(Date.now()).format('YYYY-MM-DD'),
             fecha_entrega: selected?.fecha_entrega??'',
@@ -115,14 +115,14 @@ const PedidoTerrestreCreador = (props) => {
             setSubmitting(false);
           }}>
           {({initialValues, setFieldValue, values}) => (
-            <PedidoTerrestreForm
+            <PedidoMaritimoForm
               setFieldValue={setFieldValue}
               handleOnClose={handleOnClose}
               titulo={titulo}
               accion={accion}
               clientes={clientes}
-              vehiculos={vehiculos}
-              bodegas={bodegas}
+              flotas={flotas}
+              puertos={puertos}
               tiposProducto={tiposProducto}
               initialValues={initialValues}
               values={values}
@@ -134,4 +134,4 @@ const PedidoTerrestreCreador = (props) => {
   );
 };
 
-export default PedidoTerrestreCreador;
+export default PedidoMaritimoCreador;

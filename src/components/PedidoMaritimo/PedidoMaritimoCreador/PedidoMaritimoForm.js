@@ -3,7 +3,7 @@ import {Box, Button} from '@mui/material';
 import {Form} from 'formik';
 import MyTextField from '../../../shared/components/MyTextField';
 import { mainStyles } from '../../../shared/styles/mainStyles';
-import { ACTIONS, DESCUENTO_TERRESTRE, ESTADOS_PEDIDO } from '../../../shared/constants/Constantes';
+import { ACTIONS, DESCUENTO_MARITMO, ESTADOS_PEDIDO } from '../../../shared/constants/Constantes';
 import MySelectField from '../../../shared/components/MySelectField';
 
 const grid = {
@@ -12,14 +12,14 @@ const grid = {
   gridTemplateColumns: 'repeat(2, 1fr)'
 }
 
-const PedidoTerrestreForm = (props) => {
+const PedidoMaritimoForm = (props) => {
   const {
     handleOnClose, 
     accion, 
     titulo,
     clientes,
-    vehiculos,
-    bodegas,
+    flotas,
+    puertos,
     tiposProducto,
     initialValues,
     values,
@@ -40,7 +40,7 @@ const PedidoTerrestreForm = (props) => {
      if(product && parseInt(values.cantidad_producto) >= 0){
       setFieldValue('precio_envio', product.precio_unitario*parseInt(values.cantidad_producto));
       if(values.cantidad_producto >=10){
-        setFieldValue('descuento', product.precio_unitario*parseInt(values.cantidad_producto)*DESCUENTO_TERRESTRE);
+        setFieldValue('descuento', product.precio_unitario*parseInt(values.cantidad_producto)*DESCUENTO_MARITMO);
       }
      }
     }
@@ -106,18 +106,18 @@ const PedidoTerrestreForm = (props) => {
             disabled={disabled}
           />
           <MySelectField
-            label='Bodega'
-            name='bodega_id'
+            label='Puerto'
+            name='puerto_id'
             required
             disabled={disabled}
-            options={bodegas}
+            options={puertos}
           />
           <MySelectField
-            label='Vehículo'
-            name='vehiculo_id'
+            label='Flota'
+            name='flota_id'
             required
             disabled={disabled}
-            options={vehiculos}
+            options={flotas}
           />
           <MyTextField
             label='Precio Envío'
@@ -159,4 +159,4 @@ const PedidoTerrestreForm = (props) => {
   );
 };
 
-export default PedidoTerrestreForm;
+export default PedidoMaritimoForm;

@@ -24,7 +24,7 @@ import {
   ClearAll
 } from '@mui/icons-material';
 import Swal from 'sweetalert2';
-import PedidoTerrestreCreador from './PedidoTerrestreCreador';
+import PedidoMaritimoCreador from './PedidoMaritimoCreador';
 import {
   UPDATE,
   CREATE,
@@ -38,10 +38,10 @@ import MyCell from '../../shared/components/MyCell';
 import {useDebounce} from '../../shared/customHooks/useDebounce';
 import {mainStyles} from '../../shared/styles/mainStyles';
 import { CommonContext } from '../../contexts/commonContext/commonContext';
-import { PedidoTerrestreContext } from '../../contexts/pedidoTerrestreContext/PedidoTerrestreContext';
+import { PedidoMaritimoContext } from '../../contexts/pedidoMaritimoContext/PedidoMaritimoContext';
 import { currencyFormatter } from '../../shared/utils/utils';
 import { ClienteContext } from '../../contexts/clienteContext/ClienteContext';
-import { TipoProductoTerrestreContext } from '../../contexts/tipoProductoTerrestreContext/TipoProductoTerrestreContext';
+import { TipoProductoMaritimoContext } from '../../contexts/tipoProductoMaritimoContext/TipoProductoMaritimoContext';
 
 const cells = [
   {
@@ -73,9 +73,9 @@ const cells = [
     align: 'right',
   },
   {
-    id: 'bodega',
+    id: 'puerto',
     typeHead: 'string',
-    label: 'Bodega',
+    label: 'Puerto',
     value: (value) => value,
     align: 'left',
   },
@@ -145,7 +145,7 @@ function EnhancedTableHead(props) {
 
 const EnhancedTableToolbar = (props) => {
   const {
-    onOpenAddPedidoTerrestre,
+    onOpenAddPedidoMaritimo,
     queryFilter,
     guia,
     limpiarFiltros,
@@ -170,8 +170,8 @@ const EnhancedTableToolbar = (props) => {
           </Typography>
           <Box sx={mainStyles.horizontalBottoms}>
             <Tooltip
-              title='Crear PedidoTerrestre'
-              onClick={onOpenAddPedidoTerrestre}>
+              title='Crear PedidoMaritimo'
+              onClick={onOpenAddPedidoMaritimo}>
               <IconButton
                 sx={mainStyles.createButton}
                 aria-label='filter list'>
@@ -299,9 +299,9 @@ const initialFilters = {
   producto: ''
 }
 
-const titulo = 'Pedidos Log. Terrestre';
+const titulo = 'Pedidos Log. Maritima';
 
-const PedidoTerrestre = (props) => {
+const PedidoMaritimo = (props) => {
   const [showForm, setShowForm] = useState(false);
   const [showTable, setShowTable] = useState(true);
   const [page, setPage] = useState(1);
@@ -309,10 +309,10 @@ const PedidoTerrestre = (props) => {
   const [accion, setAccion] = useState(ACTIONS.ver);
   const [selected, setSelected] = useState(0);
   const [filters, setFilters] = useState(initialFilters);
-  const {rows, desde, hasta, ultima_pagina, total, getList, onDelete} = useContext(PedidoTerrestreContext);
+  const {rows, desde, hasta, ultima_pagina, total, getList, onDelete} = useContext(PedidoMaritimoContext);
   const {message, error, messageType} = useContext(CommonContext);
   const { light: clientes, getLightList: getClientes} = useContext(ClienteContext);
-  const { light: tiposProducto, getLightList: getTiposProductos} = useContext(TipoProductoTerrestreContext);
+  const { light: tiposProducto, getLightList: getTiposProductos} = useContext(TipoProductoMaritimoContext);
   const textoPaginacion = `Mostrando de ${desde} a ${hasta} de ${total} resultados - Página ${page} de ${ultima_pagina}`;
   const { guia, fechaInicial, fechaFinal, estado, cliente, producto } = filters;
   const debouncedName = useDebounce(guia, 800);
@@ -361,19 +361,19 @@ const PedidoTerrestre = (props) => {
     getList({page, rowsPerPage, guia, fechaInicial, fechaFinal, estado, cliente, producto});
   };
 
-  const onOpenEditPedidoTerrestre = (row) => {
+  const onOpenEditPedidoMaritimo = (row) => {
     setSelected(row);
     setAccion(ACTIONS.editar);
     setShowForm(true);
   };
 
-  const onOpenViewPedidoTerrestre = (row) => {
+  const onOpenViewPedidoMaritimo = (row) => {
     setSelected(row);
     setAccion(ACTIONS.ver);
     setShowForm(true);
   };
 
-  const onDeletePedidoTerrestre = (id) => {
+  const onDeletePedidoMaritimo = (id) => {
     Swal.fire({
       title: 'Confirmar',
       text: '¿Seguro Que Desea Eliminar El Pedido?',
@@ -391,7 +391,7 @@ const PedidoTerrestre = (props) => {
     });
   };
 
-  const onOpenAddPedidoTerrestre = () => {
+  const onOpenAddPedidoMaritimo = () => {
     setSelected(0);
     setAccion(ACTIONS.crear);
     setShowForm(true);
@@ -416,7 +416,7 @@ const PedidoTerrestre = (props) => {
     <Box sx={mainStyles.root}>
       <Paper sx={mainStyles.paper}>
         <EnhancedTableToolbar
-          onOpenAddPedidoTerrestre={onOpenAddPedidoTerrestre}
+          onOpenAddPedidoMaritimo={onOpenAddPedidoMaritimo}
           queryFilter={queryFilter}
           limpiarFiltros={limpiarFiltros}
           guia={guia}
@@ -480,19 +480,19 @@ const PedidoTerrestre = (props) => {
                           <TableCell align='center' sx={mainStyles.acciones}>
                             <Tooltip title={'Editar'}>
                               <Edit
-                                onClick={() => onOpenEditPedidoTerrestre(row)}
+                                onClick={() => onOpenEditPedidoMaritimo(row)}
                                 sx={{...mainStyles.generalIcons, ...mainStyles.editIcon}}
                               />
                             </Tooltip>
                             <Tooltip title={'Ver'}>
                               <Visibility
-                                onClick={() => onOpenViewPedidoTerrestre(row)}
+                                onClick={() => onOpenViewPedidoMaritimo(row)}
                                 sx={{...mainStyles.generalIcons, ...mainStyles.visivilityIcon}}
                               />
                             </Tooltip>
                             <Tooltip title={'Eliminar'}>
                               <Delete
-                                onClick={() => onDeletePedidoTerrestre(row.id)}
+                                onClick={() => onDeletePedidoMaritimo(row.id)}
                                 sx={{...mainStyles.generalIcons, ...mainStyles.deleteIcon}}
                               />
                             </Tooltip>
@@ -560,7 +560,7 @@ const PedidoTerrestre = (props) => {
       </Paper>
 
       {showForm && (
-        <PedidoTerrestreCreador
+        <PedidoMaritimoCreador
           showForm={showForm}
           selected={selected}
           accion={accion}
@@ -578,4 +578,4 @@ const PedidoTerrestre = (props) => {
   );
 };
 
-export default PedidoTerrestre;
+export default PedidoMaritimo;

@@ -3,6 +3,8 @@ export const CREATE = 2;
 export const DELETE = 3;
 export const ERROR = 4;
 export const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, 50];
+export const DESCUENTO_TERRESTRE = 0.05;
+export const DESCUENTO_MARITMO = 0.03;
 export const ACTIONS = {
   ver: 'ver',
   editar: 'editar',
